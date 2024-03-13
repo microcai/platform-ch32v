@@ -99,6 +99,7 @@ if "nobuild" in COMMAND_LINE_TARGETS:
     target_bin = os.path.join("$BUILD_DIR", "${PROGNAME}.bin")
 else:
     target_elf = env.BuildProgram()
+    target_hex = env.ElfToHex(os.path.join("$BUILD_DIR", "${PROGNAME}"), target_elf)
     target_bin = env.ElfToBin(os.path.join("$BUILD_DIR", "${PROGNAME}"), target_elf)
     if "zephyr" in frameworks and "mcuboot-image" in COMMAND_LINE_TARGETS:
         target_bin = env.MCUbootImage(
@@ -106,7 +107,7 @@ else:
     env.Depends(target_bin, "checkprogsize")
 
 AlwaysBuild(env.Alias("nobuild", target_bin))
-target_buildprog = env.Alias("buildprog", target_bin, target_bin)
+target_buildprog = env.Alias("buildprog", target_hex, target_bin)
 
 
 #
